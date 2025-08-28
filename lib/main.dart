@@ -1,114 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-void main() => runApp(CarShowroomApp());
+void main() {
+  runApp(const MyApp());
+}
 
-class CarShowroomApp extends StatelessWidget {
-  const CarShowroomApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Zaire Showroom Page',
-      theme: ThemeData(primarySwatch: Colors.red),
-      home: CarShowroomPage(),
-    );
-  }
-}
-
-class CarShowroomPage extends StatelessWidget {
-  const CarShowroomPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white38,
-      appBar: AppBar(
-      title: Text(
-        'Zaire Car Showroom',
-        style: TextStyle(color: Colors.yellowAccent),
-      ),
-        backgroundColor: Colors.black,
+      home:Scaffold(
+        appBar: AppBar(title:Text('Zaire Car Showroom',
+        style:TextStyle(
+          fontSize: 20, letterSpacing: 12
+        )),
+        backgroundColor:Colors.amber,
         centerTitle: true,
-        
-      ),
-      body: SingleChildScrollView(
-        child: Column(
+        ),
+        body: ListView(
           children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: 'Search Cars',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.search),
-                ),
-              ),
-            ),
-            // Car Card 1
-            CarCard(
-              imageUrl: 'https://hips.hearstapps.com/hmg-prod/images/2025-tesla-model-x-6734b3d48460d.jpg?crop=0.633xw:0.507xh;0.201xw,0.236xh&resize=1200:*',
-              carName: 'Tesla Model S',
-              price: '\$75,000',
-            ),
-            // Car Card 2
-            CarCard(
-              imageUrl: 'https://imgd.aeplcdn.com/664x374/n/3te3bbb_1676645.png?q=80',
-              carName: 'BMW X5',
-              price: '\$65,000',
-            ),
+            MyListItem(carname: 'Ford', imageurl: 'assets/images/Ford.jpg', price: 600000000),
+            MyListItem(carname: 'Lamborghini', imageurl: 'assets/images/Lamborghini.jpg', price: 800000000),
+            MyListItem(carname: 'Mclaren', imageurl: 'assets/images/Mclaren.jpg', price: 500000000),
+            MyListItem(carname: 'Sedan', imageurl: 'assets/images/Sedan.jpg', price: 600000000)
           ],
+
         ),
       ),
+      
     );
   }
 }
 
-class CarCard extends StatelessWidget {
-  final String imageUrl;
-  final String carName;
-  final String price;
+class MyListItem extends StatelessWidget {
+  final String carname,imageurl;
+  final double price;
+  MyListItem({super.key,required this.carname, required this.imageurl, required this.price});
 
-  const CarCard({super.key, required this.imageUrl, required this.carName, required this.price});
-
+  final inrFormat = NumberFormat.currency(locale:'en_IN',symbol: '₹',decimalDigits:2);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(12),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+    return Card(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.grey.shade200, blurRadius: 4)],
+        side: BorderSide(color: Colors.grey,width: 0.5),
+
       ),
-      child: Column(
+      elevation: 1,
+      color: Colors.white,
+      child: Row(
         children: [
-          Stack(
+          Container(
+            padding: EdgeInsets.all(12),
+            color: Colors.grey[200],
+            width:200,
+            height:200,
+            child: Image.asset(imageurl,width:160,height:150, fit:BoxFit.cover),
+          ),
+          SizedBox(width: 10),
+          Column(
             children: [
-              Image.network(imageUrl, height: 200, fit: BoxFit.cover),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Icon(Icons.favorite_border, color: Colors.white),
-              ),
+              Text(carname,style:TextStyle(
+                fontSize: 20,fontWeight: FontWeight.w600
+              )),
+              SizedBox(height:20),
+              Text(inrFormat.format(price),style:TextStyle(
+                fontSize: 18
+              )),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: (){},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white
+                ),
+                child: Text("Buy Now"))
             ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(carName, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              Text(price, style: TextStyle(fontSize: 18, color: Colors.green)),
-            ],
-          ),
-          SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {
-              // Add action here
-            },
-            child: Text('Book Now'),
-          ),
+          )
         ],
-      ),
+      )
     );
   }
 }
